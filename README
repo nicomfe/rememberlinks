@@ -1,0 +1,11 @@
+Here are the steps to run this project:
+
+#1 - cd into the Project root folder
+#2- run sudo npm install
+#3- run bower install
+#4- if you dont have mongodb installed run: brew install mongodb
+#5- run mongod --config /usr/local/etc/mongod.conf (to run mongodb database)
+#6- run grunt serve (this runs grunt serve for frontend and node server for backend)
+#7- cd into <project-root>/RememeberLinks/node_modules/mongo-express
+#8- copy content of config.default.js into a new file called config.js (if this doesnt exist)
+#9- run node app (in order to run mongo-express, this is a Admin UI for mongodb url is http://localhost:8081)
