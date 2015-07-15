@@ -1,7 +1,6 @@
 'use strict';
 
-angular.module('rememberLinksAppApp')
-  .controller('SignupCtrl', function ($scope, Auth, $location, $window) {
+RememberLinksApp.controller('SignupCtrl', function ($scope, Auth, $location, $window) {
     $scope.user = {};
     $scope.errors = {};
 

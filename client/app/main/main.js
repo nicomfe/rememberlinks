@@ -1,7 +1,6 @@
 'use strict';
 
-angular.module('rememberLinksAppApp')
-  .config(function ($routeProvider) {
+RememberLinksApp.config(function ($routeProvider) {
     $routeProvider
       .when('/', {
         templateUrl: 'app/main/main.html',

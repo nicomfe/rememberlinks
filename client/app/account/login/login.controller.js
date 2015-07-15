@@ -1,7 +1,6 @@
 'use strict';
 
-angular.module('rememberLinksAppApp')
-  .controller('LoginCtrl', function ($scope, Auth, $location, $window) {
+RememberLinksApp.controller('LoginCtrl', function ($scope, Auth, $location, $window) {
     $scope.user = {};
     $scope.errors = {};
 
@@ -15,7 +14,7 @@ angular.module('rememberLinksAppApp')
         })
         .then( function() {
           // Logged in, redirect to home
-          $location.path('/');
+          $location.path('/my-links');
         })
         .catch( function(err) {
           $scope.errors.other = err.message;

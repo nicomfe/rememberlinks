@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('rememberLinksAppApp')
+angular.module('rememberLinksApp')
   .controller('SettingsCtrl', function ($scope, User, Auth) {
     $scope.errors = {};
 

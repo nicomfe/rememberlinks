@@ -3,8 +3,7 @@
 /**
  * Removes server error when user updates input
  */
-angular.module('rememberLinksAppApp')
-  .directive('mongooseError', function () {
+RememberLinksApp.directive('mongooseError', function () {
     return {
       restrict: 'A',
       require: 'ngModel',

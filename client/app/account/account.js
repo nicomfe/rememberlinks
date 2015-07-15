@@ -1,7 +1,6 @@
 'use strict';
 
-angular.module('rememberLinksAppApp')
-  .config(function ($routeProvider) {
+RememberLinksApp.config(function ($routeProvider) {
     $routeProvider
       .when('/login', {
         templateUrl: 'app/account/login/login.html',
@@ -14,6 +13,11 @@ angular.module('rememberLinksAppApp')
       .when('/settings', {
         templateUrl: 'app/account/settings/settings.html',
         controller: 'SettingsCtrl',
+        authenticate: true
+      })
+      .when('/my-links', {
+        templateUrl: 'app/account/my-links/my-links.html',
+        controller: 'MyLinksCtrl',
         authenticate: true
       });
   });

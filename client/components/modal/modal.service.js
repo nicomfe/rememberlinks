@@ -1,7 +1,6 @@
 'use strict';
 
-angular.module('rememberLinksAppApp')
-  .factory('Modal', function ($rootScope, $modal) {
+RememberLinksApp.factory('Modal', function ($rootScope, $modal) {
     /**
      * Opens a modal
      * @param  {Object} scope      - an object to be merged with modal's scope

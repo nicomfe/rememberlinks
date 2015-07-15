@@ -1,0 +1,26 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+
+<header class="hero-unit" id="banner">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        <label for="">URL: </label><input type="text" ng-model="newLink.url"/>
+      </div>
+      <div class="col-lg-12">
+        <label for="">Info: </label><input type="text" ng-model="newLink.info"/>
+      </div>
+      <button ng-click="addLink()">Add Link</button>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+  <div class="row">
+    <div class="col-lg-12">
+      <h1 class="page-header">My links</h1>
+      <ul class="nav nav-tabs nav-stacked col-xs-12" ng-repeat="link in links">
+        <li><a href="{{link.url}}" target="_blank">{{link.url}}</a> {{link.info}}</li>
+      </ul>
+    </div>
+  </div>
+</div>
