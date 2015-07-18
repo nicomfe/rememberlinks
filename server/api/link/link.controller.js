@@ -71,6 +71,14 @@ exports.getByUser = function(req, res) {
   });
 };
 
+exports.getByTags = function(req, res) {
+  var filterTags = req.params.tags.split(',');
+  //TODO need to improve this query currently searching with 'or'
+  link.find({'tags':{ $in : filterTags }},function (err, links) {
+    return res.json(200, links);
+  });
+};
+
 function handleError(res, err) {
   return res.send(500, err);
 }

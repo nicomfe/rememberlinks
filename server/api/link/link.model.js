@@ -6,6 +6,7 @@ var mongoose = require('mongoose'),
 var LinkSchema = new Schema({
   url: String,
   info: String,
+  tags: [String],
   userId: String
 });
 

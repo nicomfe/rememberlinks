@@ -8,6 +8,7 @@ var app = express();
 var router = express.Router();
 
 router.get("/getByUser/:id", controller.getByUser);
+router.get("/getByTags/:tags", controller.getByTags);
 router.get('/', controller.index);
 router.get('/:id', controller.show);
 router.post('/', controller.create);
