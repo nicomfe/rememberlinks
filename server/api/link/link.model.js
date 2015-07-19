@@ -7,7 +7,8 @@ var LinkSchema = new Schema({
   url: String,
   info: String,
   tags: [String],
-  userId: String
+  userId: String,
+  date: Date
 });
 
 module.exports = mongoose.model('Link', LinkSchema);

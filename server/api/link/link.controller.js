@@ -53,13 +53,9 @@ exports.update = function(req, res) {
 
 // Deletes a link from the DB.
 exports.destroy = function(req, res) {
-  link.findById(req.params.id, function (err, link) {
+  link.findOneAndRemove({'_id':req.params.id}, function (err) {
     if(err) { return handleError(res, err); }
-    if(!link) { return res.send(404); }
-    link.remove(function(err) {
-      if(err) { return handleError(res, err); }
-      return res.send(204);
-    });
+    return res.send(204);
   });
 };
 

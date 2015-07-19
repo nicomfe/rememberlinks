@@ -30,7 +30,7 @@
     <div class="col-lg-12">
       <h1 class="page-header">My links</h1>
       <ul class="nav nav-tabs nav-stacked col-xs-12" ng-repeat="link in links">
-        <li><a href="{{link.url}}" target="_blank">{{link.url}}</a> {{link.info}} {{link.tags}}</li>
+        <li><a href="{{link.url}}" target="_blank">{{link.url}}</a> {{link.info}} {{link.tags}} - <a ng-click="removeLinkById(link._id)">Remove</a></li>
       </ul>
     </div>
   </div>

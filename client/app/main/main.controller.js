@@ -1,25 +1,5 @@
 'use strict';
 
-RememberLinksApp.controller('MainCtrl', function ($scope, $http) {
-    // $scope.awesomeThings = [];
+RememberLinksApp.controller('MainCtrl', function () {
 
-    // $http.get('/api/things').success(function(awesomeThings) {
-    //   $scope.awesomeThings = awesomeThings;
-    // });
-
-    // $http.get('/api/links').success(function(links) {
-    //   $scope.links = links;
-    // });
-
-    // $scope.addThing = function() {
-    //   if($scope.newThing === '') {
-    //     return;
-    //   }
-    //   $http.post('/api/things', { name: $scope.newThing });
-    //   $scope.newThing = '';
-    // };
-
-    // $scope.deleteThing = function(thing) {
-    //   $http.delete('/api/things/' + thing._id);
-    // };
-  });
+});
