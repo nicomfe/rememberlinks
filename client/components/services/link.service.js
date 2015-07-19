@@ -4,7 +4,7 @@ RememberLinksApp.factory('LinkService', function Auth($location, $rootScope, $ht
   return {
     getByUser: function(currentUser){
       var deferred = $q.defer();
-      return $http.get('/api/links/getByUser/' + currentUser._id).success(function(links) {
+      $http.get('/api/links/getByUser/' + currentUser._id).success(function(links) {
         deferred.resolve(links);
       })
       .error(function(data) {

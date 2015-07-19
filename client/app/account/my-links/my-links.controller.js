@@ -5,15 +5,8 @@ RememberLinksApp.controller('MyLinksCtrl', function ($scope, Auth, $http, LinkSe
       $scope.newLink.userId = $scope.currentUser._id;
       $scope.newLink.tags = $scope.newLink.tags.split(' ');
       $scope.newLink.date = new Date();
-      // $http.post('/api/links',  $scope.newLink ).success(function(){
-      //   console.debug('success adding link');
-      // })
-      // .error(function(data) {
-      //   console.log('Error adding link: ');
-      //   console.error(data);
-      // });
       LinkService.add($scope.newLink).catch(function(err){
-        console.log('TODO handle error');
+        console.log('TODO handle error' + err);
       });
       $scope.newLink = {};
     };
@@ -30,7 +23,7 @@ RememberLinksApp.controller('MyLinksCtrl', function ($scope, Auth, $http, LinkSe
         LinkService.getByTags($scope.searchFilterTags).then(function(links){
           $scope.links = links;
         },function(err){
-          console.log('TODO handle error');
+          console.log('TODO handle error' + err);
         });
       }else{
         $scope.getAllLinks();
@@ -41,7 +34,7 @@ RememberLinksApp.controller('MyLinksCtrl', function ($scope, Auth, $http, LinkSe
       LinkService.getByUser($scope.currentUser).then(function(links){
         $scope.links = links.data;
       },function(err){
-        console.log('TODO handle error');
+        console.log('TODO handle error' + err);
       });
     };
 
