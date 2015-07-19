@@ -1,16 +1,19 @@
 'use strict';
 
-RememberLinksApp.controller('MyLinksCtrl', function ($scope, Auth, $http) {
+RememberLinksApp.controller('MyLinksCtrl', function ($scope, Auth, $http, LinkService) {
     $scope.addLink = function() {
       $scope.newLink.userId = $scope.currentUser._id;
       $scope.newLink.tags = $scope.newLink.tags.split(' ');
       $scope.newLink.date = new Date();
-      $http.post('/api/links',  $scope.newLink ).success(function(){
-        console.debug('success adding link');
-      })
-      .error(function(data) {
-        console.log('Error adding link: ');
-        console.error(data);
+      // $http.post('/api/links',  $scope.newLink ).success(function(){
+      //   console.debug('success adding link');
+      // })
+      // .error(function(data) {
+      //   console.log('Error adding link: ');
+      //   console.error(data);
+      // });
+      LinkService.add($scope.newLink).catch(function(err){
+        console.log('TODO handle error');
       });
       $scope.newLink = {};
     };
@@ -18,38 +21,29 @@ RememberLinksApp.controller('MyLinksCtrl', function ($scope, Auth, $http) {
 
     Auth.getCurrentUser().$promise.then(function(user){
       $scope.currentUser = user;
-      $scope.getLinks();
+      $scope.getAllLinks();
     });
-
-    $scope.getLinks = function(){
-      getAllLinks();
-    };
 
     $scope.getLinksByTags = function(){
       $scope.searchFilterTags = ($scope.searchFilterTags) ? $scope.searchFilterTags.split(' ') : '';
       if($scope.searchFilterTags){
-        $http.get('/api/links/getByTags/' + $scope.searchFilterTags).success(function(links) {
+        LinkService.getByTags($scope.searchFilterTags).then(function(links){
           $scope.links = links;
-        })
-        .error(function(data) {
-          console.log('Error getting link: ');
-          console.error(data);
+        },function(err){
+          console.log('TODO handle error');
         });
       }else{
-        getAllLinks();
+        $scope.getAllLinks();
       }
-
     };
 
-    function getAllLinks(){
-      $http.get('/api/links/getByUser/' + $scope.currentUser._id).success(function(links) {
-        $scope.links = links;
-      })
-      .error(function(data) {
-        console.log('Error getting all links: ');
-        console.error(data);
+    $scope.getAllLinks = function(){
+      LinkService.getByUser($scope.currentUser).then(function(links){
+        $scope.links = links.data;
+      },function(err){
+        console.log('TODO handle error');
       });
-    }
+    };
 
     $scope.removeLinkById = function(id){
       $http.delete('/api/links/' + id).success(function() {
