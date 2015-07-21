@@ -48,15 +48,15 @@ var all = {
   },
 
   twitter: {
-    clientID:     process.env.TWITTER_ID || 'id',
-    clientSecret: process.env.TWITTER_SECRET || 'secret',
-    callbackURL:  (process.env.DOMAIN || '') + '/auth/twitter/callback'
+    clientID:      process.env.TWITTER_ID || 'id',
+    clientSecret:  process.env.TWITTER_SECRET || 'secret',
+    callbackURL:   (process.env.DOMAIN || '') + '/auth/twitter/callback'
   },
 
   google: {
-    clientID:     process.env.GOOGLE_ID || 'id',
-    clientSecret: process.env.GOOGLE_SECRET || 'secret',
-    callbackURL:  (process.env.DOMAIN || '') + '/auth/google/callback'
+    clientID:      process.env.GOOGLE_ID || 'id',
+    clientSecret:  process.env.GOOGLE_SECRET || 'secret',
+    callbackURL:   (process.env.DOMAIN || '') +'/auth/google/callback'//(process.env.DOMAIN || '') + '/auth/google/callback'
   }
 };
 

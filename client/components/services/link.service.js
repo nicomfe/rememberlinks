@@ -37,6 +37,18 @@ RememberLinksApp.factory('LinkService', function Auth($location, $rootScope, $ht
         deferred.reject(data);
       });
       return deferred.promise;
+    },
+    update: function(link){
+      var deferred = $q.defer();
+      $http.put('/api/links/'+link._id,link).success(function(){
+        deferred.resolve(true);
+      })
+      .error(function(data) {
+        console.log('Error updating link: ');
+        console.error(data);
+        deferred.reject(data);
+      });
+      return deferred.promise;
     }
   };
 });

@@ -29,8 +29,20 @@
     <div class="col-lg-12">
       <h1 class="page-header">My links</h1>
       <ul class="nav nav-tabs nav-stacked col-xs-12" ng-repeat="link in links">
-        <li><a href="{{link.url}}" target="_blank">{{link.url}}</a> {{link.info}} {{link.tags}} - <a ng-click="removeLinkById(link._id)">Remove</a></li>
+        <li><a href="{{link.url}}" target="_blank">URL: {{link.url}}</a></li>
+        <li>Info and tags: {{link.info}} {{link.tags}}</li>
+        <li>Last updated: {{link.date}}</li>
+        <li><a ng-click="removeLinkById(link._id)">Remove</a><a ng-click="editLink(link)">Edit</a></li>
       </ul>
     </div>
   </div>
+  <div class="row">
+    <div class="col-lg-12">
+      <div>URL<input type="text" ng-model="linkToUpdate.url"/></div>
+      <div>Info<input type="text" ng-model="linkToUpdate.info"/></div>
+      <div>Tags<input type="text" ng-model="linkToUpdate.tags"/></div>
+      <div><a ng-click="updateLink(linkToUpdate)">Update</a></div>
+    </div>
+  </div>
 </div>
+

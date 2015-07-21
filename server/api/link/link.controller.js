@@ -31,24 +31,29 @@ exports.show = function(req, res) {
 
 // Creates a new link in the DB.
 exports.create = function(req, res) {
-  link.create(req.body, function(err, link) {
-    if(err) { return handleError(res, err); }
-    return res.json(201, link);
-  });
+  if(req.body){
+    req.body.date = new Date();
+    link.create(req.body, function(err, link) {
+      if(err) { return handleError(res, err); }
+      return res.json(201, link);
+    });
+  }else{
+    return handleError(res, 'Body not found');
+  }
+
 };
 
 // Updates an existing link in the DB.
 exports.update = function(req, res) {
-  if(req.body._id) { delete req.body._id; }
-  link.findById(req.params.id, function (err, link) {
-    if (err) { return handleError(res, err); }
-    if(!link) { return res.send(404); }
-    var updated = _.merge(link, req.body);
-    updated.save(function (err) {
+  if(req.body){
+    req.body.date = new Date();
+    link.findOneAndUpdate({_id: req.body._id}, req.body, function (err, link) {
       if (err) { return handleError(res, err); }
       return res.json(200, link);
     });
-  });
+  }else{
+    return handleError(res, 'Body not found');
+  }
 };
 
 // Deletes a link from the DB.

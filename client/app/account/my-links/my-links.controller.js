@@ -4,7 +4,6 @@ RememberLinksApp.controller('MyLinksCtrl', function ($scope, Auth, $http, LinkSe
     $scope.addLink = function() {
       $scope.newLink.userId = $scope.currentUser._id;
       $scope.newLink.tags = $scope.newLink.tags.split(' ');
-      $scope.newLink.date = new Date();
       LinkService.add($scope.newLink).catch(function(err){
         console.log('TODO handle error' + err);
       });
@@ -32,7 +31,7 @@ RememberLinksApp.controller('MyLinksCtrl', function ($scope, Auth, $http, LinkSe
 
     $scope.getAllLinks = function(){
       LinkService.getByUser($scope.currentUser).then(function(links){
-        $scope.links = links.data;
+        $scope.links = links;
       },function(err){
         console.log('TODO handle error' + err);
       });
@@ -46,5 +45,17 @@ RememberLinksApp.controller('MyLinksCtrl', function ($scope, Auth, $http, LinkSe
         console.log('Error removing link: ');
         console.error(data);
       });
+    };
+
+    $scope.editLink = function(linkToBeUpdated) {
+      $scope.linkToUpdate = angular.copy(linkToBeUpdated);
+      $scope.displayEdit = true;
+    };
+    $scope.updateLink = function(linkToUpdate) {
+      LinkService.update(linkToUpdate).catch(function(err){
+        console.log('TODO handle error' + err);
+      });
+      console.log('success');
+      $scope.displayEdit = false;
     };
   });

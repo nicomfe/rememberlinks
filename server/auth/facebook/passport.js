@@ -16,9 +16,10 @@ exports.setup = function (User, config) {
           return done(err);
         }
         if (!user) {
+          console.log('asddsadsaasdsd');
           user = new User({
             name: profile.displayName,
-            email: profile.emails[0].value,
+            email: (profile.emails) ? profile.emails[0].value : '',
             role: 'user',
             username: profile.username,
             provider: 'facebook',
