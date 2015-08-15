@@ -48,14 +48,13 @@ RememberLinksApp.controller('MyLinksCtrl', function ($scope, Auth, $http, LinkSe
     };
 
     $scope.editLink = function(linkToBeUpdated) {
-      $scope.linkToUpdate = angular.copy(linkToBeUpdated);
-      $scope.displayEdit = true;
+      $scope.linkToUpdate = linkToBeUpdated;
+      $scope.displayEditId = linkToBeUpdated._id;
     };
     $scope.updateLink = function(linkToUpdate) {
       LinkService.update(linkToUpdate).catch(function(err){
         console.log('TODO handle error' + err);
       });
-      console.log('success');
-      $scope.displayEdit = false;
+      $scope.displayEditId = '';
     };
   });

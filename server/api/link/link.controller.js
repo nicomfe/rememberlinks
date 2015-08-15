@@ -11,6 +11,12 @@
 
 var _ = require('lodash');
 var link = require('./link.model');
+var ogs = require('open-graph-scraper');
+var request = require('request');
+var Promise = require('promise');
+var imageSize = require('image-size');
+var url = require('url');
+var http = require('http');
 
 // Get list of links
 exports.index = function(req, res) {
@@ -33,14 +39,16 @@ exports.show = function(req, res) {
 exports.create = function(req, res) {
   if(req.body){
     req.body.date = new Date();
-    link.create(req.body, function(err, link) {
-      if(err) { return handleError(res, err); }
-      return res.json(201, link);
+    var newLink = req.body;
+    link.create(newLink, function(err, link) {
+    if(err) { return handleError(res, err); }
+      updateLinkWithMetadata(link).then(function(link){
+        return res.json(201, link);
+      });
     });
   }else{
     return handleError(res, 'Body not found');
   }
-
 };
 
 // Updates an existing link in the DB.
@@ -78,6 +86,90 @@ exports.getByTags = function(req, res) {
   link.find({'tags':{ $in : filterTags }},function (err, links) {
     return res.json(200, links);
   });
+};
+
+function updateLinkWithMetadata(linkToUpdate){
+  var deferred;
+  deferred = new Promise(function(resolve,reject){
+    getSiteMetadata(linkToUpdate.url).then(function(metadata){
+      if(metadata.hybridGraph){
+        linkToUpdate.title = metadata.hybridGraph.title;
+      }
+      getValidImage(metadata).then(function(result){
+        if(result){
+          linkToUpdate.image = result;
+          link.findOneAndUpdate({_id: linkToUpdate._id}, linkToUpdate, function (err, linkUpdated) {
+            resolve(linkUpdated);
+          });
+        }
+      });
+
+    });
+  });
+  return deferred;
+}
+
+function getValidImage(metadata){
+  var images = [];
+
+  if(metadata.openGraph && metadata.openGraph.image){
+    images.push(metadata.openGraph.image);
+  }
+  if(metadata.htmlInferred){
+    images = images.concat(metadata.htmlInferred.images);
+  }
+
+  var deferred = new Promise(function(resolve,reject){
+    for(var i=0 ; i<images.length ; i++){
+      var imgUrl = images[i];
+
+      if (imgUrl.match(/\.(jpg|bmp|SVG|png|gif)$/)){
+        isValidImage(imgUrl).then(function(data){
+          if(data.result === true){
+            resolve(data.image);
+          }
+        });
+      }
+    }
+  });
+  return deferred;
+}
+
+function isValidImage(imageUrl){
+
+  var deferred = new Promise(function(resolve,reject){
+    var options = url.parse(imageUrl);
+    var chunks = [];
+    http.get(options, function (response) {
+      var chunks = [];
+      response.on('data', function (chunk) {
+        chunks.push(chunk);
+      }).on('end', function() {
+        var buffer = Buffer.concat(chunks);
+        var dimensions = imageSize(buffer);
+        if(dimensions && dimensions.height > 200 && dimensions.width > 200){
+          resolve({result:true, image: imageUrl});
+        }else{
+          resolve({result:false, image: imageUrl});
+        }
+      });
+    });
+  });
+  return deferred;
+}
+
+function getSiteMetadata (url) {
+  var deferred;
+  if(url){
+    url = encodeURIComponent(url);
+    deferred = new Promise(function(resolve,reject){
+      request('http://opengraph.io/api/1.0/site/'+url, function(error, response, body) {
+        var meta = JSON.parse(body);
+        resolve(meta);
+      });
+    });
+  }
+  return deferred;
 };
 
 function handleError(res, err) {

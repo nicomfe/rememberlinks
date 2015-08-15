@@ -2,26 +2,11 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-lg-12">
-      <h1 class="page-header">Ad new link</h1>
-      <label for="">URL: </label><input type="text" ng-model="newLink.url"/>
-    </div>
-    <div class="col-lg-12">
-      <label for="">Info: </label><input type="text" ng-model="newLink.info"/>
-    </div>
-    <div class="col-lg-12">
-      <label for="">Tags: </label><input type="text" ng-model="newLink.tags"/>
-    </div>
-    <div class="col-lg-12">
-       <button ng-click="addLink()">Add Link</button>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-lg-12">
-      <h1 class="page-header">Search</h1>
+    <h1 class="page-header">Search</h1>
+    <div class="col-xs-3">
       <label for="">Tags: </label><input type="text" ng-model="searchFilterTags"/>
     </div>
-    <div class="col-lg-12">
+    <div class="col-xs-9">
        <button ng-click="getLinksByTags()">Search</button>
     </div>
   </div>
@@ -29,19 +14,47 @@
     <div class="col-lg-12">
       <h1 class="page-header">My links</h1>
       <ul class="nav nav-tabs nav-stacked col-xs-12" ng-repeat="link in links">
-        <li><a href="{{link.url}}" target="_blank">URL: {{link.url}}</a></li>
-        <li>Info and tags: {{link.info}} {{link.tags}}</li>
-        <li>Last updated: {{link.date}}</li>
-        <li><a ng-click="removeLinkById(link._id)">Remove</a><a ng-click="editLink(link)">Edit</a></li>
+        <li>
+          <div class="row">
+            <div class="col-xs-12 col-sm-3">
+               <a ng-href="{{link.url}}" target="_blank">
+                <img style="width:200px" ng-src="{{link.image}}" />
+              </a>
+            </div>
+            <div class="col-xs-12 col-sm-7">
+                <div ng-show="displayEditId!=link.title" >{{link.title}}</div>
+                <div ng-show="displayEditId!=link._id"><a ng-href="{{link.url}}" target="_blank">{{link.url}}</a></div>
+                <div ng-show="displayEditId!=link._id" >{{link.date}}</div>
+                <div ng-show="displayEditId!=link._id" >{{link.info}}</div>
+                <div ng-show="displayEditId!=link._id" >{{link.tags}}</div>
+
+                <div ng-show="displayEditId==link._id" ><input type="text" ng-model="linkToUpdate.url"/></div>
+                <div ng-show="displayEditId==link._id" ><input type="text" ng-model="linkToUpdate.info"/></div>
+                <div ng-show="displayEditId==link._id" ><input type="text" ng-model="linkToUpdate.tags"/></div>
+                <div>
+                  <a ng-show="displayEditId!=link._id" ng-click="removeLinkById(link._id)">Remove</a>
+                  <a ng-show="displayEditId!=link._id" ng-click="editLink(link)">Edit</a>
+                  <a ng-show="displayEditId==link._id" ng-click="updateLink(linkToUpdate)">Save</a>
+                </div>
+            </div>
+          </div>
+        </li>
       </ul>
     </div>
   </div>
   <div class="row">
-    <div class="col-lg-12">
-      <div>URL<input type="text" ng-model="linkToUpdate.url"/></div>
-      <div>Info<input type="text" ng-model="linkToUpdate.info"/></div>
-      <div>Tags<input type="text" ng-model="linkToUpdate.tags"/></div>
-      <div><a ng-click="updateLink(linkToUpdate)">Update</a></div>
+    <h1 class="page-header">Ad new link</h1>
+    <div>
+      <label for="">URL: </label><input type="text" ng-model="newLink.url"/>
+    </div>
+    <div>
+      <label for="">Info: </label><input type="text" ng-model="newLink.info"/>
+    </div>
+    <div>
+      <label for="">Tags: </label><input type="text" ng-model="newLink.tags"/>
+    </div>
+    <div>
+       <button ng-click="addLink()">Add Link</button>
     </div>
   </div>
 </div>

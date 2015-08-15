@@ -1,5 +1,6 @@
 var passport = require('passport');
 var FacebookStrategy = require('passport-facebook').Strategy;
+var FB = require('fb');
 
 exports.setup = function (User, config) {
   passport.use(new FacebookStrategy({
@@ -16,19 +17,26 @@ exports.setup = function (User, config) {
           return done(err);
         }
         if (!user) {
-          console.log('asddsadsaasdsd');
-          user = new User({
-            name: profile.displayName,
-            email: (profile.emails) ? profile.emails[0].value : '',
-            role: 'user',
-            username: profile.username,
-            provider: 'facebook',
-            facebook: profile._json
-          });
-          user.save(function(err) {
-            if (err) done(err);
-            return done(err, user);
-          });
+          FB.api(
+              '/'+profile.id+'/likes?access_token='+accessToken,
+              function (response) {
+                user = new User({
+                  name: profile.displayName,
+                  email: (profile.emails) ? profile.emails[0].value : '',
+                  role: 'user',
+                  username: profile.username,
+                  provider: 'facebook',
+                  facebook: profile._json
+                });
+                if (response && !response.error) {
+                  user.likes = response.data;
+                }
+                user.save(function(err) {
+                  if (err) done(err);
+                  return done(err, user);
+                });
+              }
+          );
         } else {
           return done(err, user);
         }
