@@ -110,27 +110,29 @@ function updateLinkWithMetadata(linkToUpdate){
 }
 
 function getValidImage(metadata){
-  var images = [];
 
-  if(metadata.openGraph && metadata.openGraph.image){
-    images.push(metadata.openGraph.image);
-  }
-  if(metadata.htmlInferred){
-    images = images.concat(metadata.htmlInferred.images);
-  }
 
   var deferred = new Promise(function(resolve,reject){
-    for(var i=0 ; i<images.length ; i++){
-      var imgUrl = images[i];
+    var images = [];
 
-      if (imgUrl.match(/\.(jpg|bmp|SVG|png|gif)$/)){
-        isValidImage(imgUrl).then(function(data){
-          if(data.result === true){
-            resolve(data.image);
-          }
-        });
+    if(metadata.openGraph && metadata.openGraph.image){
+      // images.push(metadata.openGraph.image);
+      resolve(metadata.openGraph.image);
+    }else if(metadata.htmlInferred){
+      images = images.concat(metadata.htmlInferred.images);
+      for(var i=0 ; i<images.length ; i++){
+        var imgUrl = images[i];
+
+        if (imgUrl.match(/\.(jpg|bmp|SVG|png|gif)$/)){
+          isValidImage(imgUrl).then(function(data){
+            if(data.result === true){
+              resolve(data.image);
+            }
+          });
+        }
       }
     }
+
   });
   return deferred;
 }
