@@ -4,7 +4,10 @@ RememberLinksApp.controller('MyLinksCtrl', function ($scope, Auth, $http, LinkSe
     $scope.addLink = function() {
       $scope.newLink.userId = $scope.currentUser._id;
       $scope.newLink.tags = $scope.newLink.tags.split(' ');
-      LinkService.add($scope.newLink).catch(function(err){
+      LinkService.add($scope.newLink).then(function(linkAdded){
+        $scope.links.push(linkAdded);
+      })
+      .catch(function(err){
         console.log('TODO handle error' + err);
       });
       $scope.newLink = {};

@@ -28,8 +28,8 @@ RememberLinksApp.factory('LinkService', function Auth($location, $rootScope, $ht
     },
     add: function(link){
       var deferred = $q.defer();
-      $http.post('/api/links',link).success(function(){
-        deferred.resolve(true);
+      $http.post('/api/links',link).success(function(linkAdded){
+        deferred.resolve(linkAdded);
       })
       .error(function(data) {
         console.log('Error adding link: ');

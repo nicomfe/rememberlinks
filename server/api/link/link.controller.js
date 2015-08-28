@@ -42,8 +42,8 @@ exports.create = function(req, res) {
     var newLink = req.body;
     link.create(newLink, function(err, link) {
     if(err) { return handleError(res, err); }
-      updateLinkWithMetadata(link).then(function(link){
-        return res.json(201, link);
+      updateLinkWithMetadata(link).then(function(linkAdded){
+        return res.json(200,linkAdded);
       });
     });
   }else{
@@ -95,15 +95,16 @@ function updateLinkWithMetadata(linkToUpdate){
       if(metadata.hybridGraph){
         linkToUpdate.title = metadata.hybridGraph.title;
       }
-      getValidImage(metadata).then(function(result){
-        if(result){
-          linkToUpdate.image = result;
-          link.findOneAndUpdate({_id: linkToUpdate._id}, linkToUpdate, function (err, linkUpdated) {
-            resolve(linkUpdated);
-          });
-        }
-      });
-
+      resolve(linkToUpdate);
+      // if reenable this again, catch error when no image is found to return a valid response anyway
+      // getValidImage(metadata).then(function(result){
+      //   if(result){
+      //     linkToUpdate.image = result;
+      //     link.findOneAndUpdate({_id: linkToUpdate._id}, linkToUpdate, function (err, linkUpdated) {
+      //       resolve(linkUpdated);
+      //     });
+      //   }
+      // });
     });
   });
   return deferred;
