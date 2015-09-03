@@ -49,6 +49,17 @@ RememberLinksApp.factory('LinkService', function Auth($location, $rootScope, $ht
         deferred.reject(data);
       });
       return deferred.promise;
+    },
+    removeById: function(id){
+      var deferred = $q.defer();
+      $http.delete('/api/links/' + id).success(function() {
+        resolve(true);
+      })
+      .error(function(data) {
+        console.log('Error removing link: ');
+        console.error(data);
+      });
+      return deferred.promise;
     }
   };
 });

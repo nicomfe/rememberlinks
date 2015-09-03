@@ -1,6 +1,6 @@
 'use strict';
 
-RememberLinksApp.controller('MyLinksCtrl', function ($scope, Auth, $http, LinkService) {
+RememberLinksApp.controller('MyLinksCtrl', function ($scope, Auth, $http, LinkService, messages) {
     $scope.addLink = function() {
       $scope.newLink.userId = $scope.currentUser._id;
       $scope.newLink.tags = $scope.newLink.tags.split(' ');
@@ -14,10 +14,16 @@ RememberLinksApp.controller('MyLinksCtrl', function ($scope, Auth, $http, LinkSe
     };
     $scope.newLink = {};
 
-    Auth.getCurrentUser().$promise.then(function(user){
-      $scope.currentUser = user;
-      $scope.getAllLinks();
-    });
+    $scope.init = function(){
+      Auth.getCurrentUser().$promise.then(function onSuccess(user) {
+        $scope.currentUser = user;
+        getAllLinks();
+        cleanErrorMessage();
+      }, function onError() {
+        displayError(messages.UNEXPECTED_ERROR);
+      });
+    };
+    $scope.init();
 
     $scope.getLinksByTags = function(){
       $scope.searchFilterTags = ($scope.searchFilterTags) ? $scope.searchFilterTags.split(' ') : '';
@@ -28,11 +34,20 @@ RememberLinksApp.controller('MyLinksCtrl', function ($scope, Auth, $http, LinkSe
           console.log('TODO handle error' + err);
         });
       }else{
-        $scope.getAllLinks();
+        getAllLinks();
       }
     };
 
-    $scope.getAllLinks = function(){
+    function cleanErrorMessage(){
+      $scope.errorMessage = '';
+    }
+    function displayError(message){
+      $scope.errorMessage = message;
+      // TODO Add functonality to display the error just for a while
+      // and then hide it in the UI and delete the variable from scope
+    };
+
+    function getAllLinks(){
       LinkService.getByUser($scope.currentUser).then(function(links){
         $scope.links = links;
       },function(err){
@@ -41,12 +56,14 @@ RememberLinksApp.controller('MyLinksCtrl', function ($scope, Auth, $http, LinkSe
     };
 
     $scope.removeLinkById = function(id){
-      $http.delete('/api/links/' + id).success(function() {
-        console.debug('success removing');
-      })
-      .error(function(data) {
-        console.log('Error removing link: ');
-        console.error(data);
+      LinkService.removeById(id).then(function(success){
+        if(success){
+          $scope.links = $scope.links.filter(function (el) {
+            return el._id !== id;
+          });
+        }
+      },function(err){
+        console.log('TODO handle error' + err);
       });
     };
 
@@ -54,10 +71,12 @@ RememberLinksApp.controller('MyLinksCtrl', function ($scope, Auth, $http, LinkSe
       $scope.linkToUpdate = linkToBeUpdated;
       $scope.displayEditId = linkToBeUpdated._id;
     };
+
     $scope.updateLink = function(linkToUpdate) {
-      LinkService.update(linkToUpdate).catch(function(err){
+      LinkService.update(linkToUpdate).then(function(){
+        $scope.displayEditId = '';
+      },function(err){
         console.log('TODO handle error' + err);
       });
-      $scope.displayEditId = '';
     };
   });
