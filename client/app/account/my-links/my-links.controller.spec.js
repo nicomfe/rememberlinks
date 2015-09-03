@@ -5,7 +5,7 @@ describe('Controller: MyLinksCtrl', function () {
   // load the controller's module
   beforeEach(module('rememberLinksApp'));
 
-  var MyLinksCtrl, scope, succeedPromise, http, messsages;
+  var MyLinksCtrl, scope, succeedCurrentUserPromise, http, messsages;
 
   var LinkServiceSpy, AuthSpy;
   var $controller;
@@ -39,17 +39,16 @@ describe('Controller: MyLinksCtrl', function () {
     LinkServiceSpy = LinkService;
     messsages = messages;
     AuthSpy = Auth;
+
     spyOn(AuthSpy, 'getCurrentUser').andCallFake(function() {
       var mockUser = {};
-      var thenMock = function(onSuccess,onError){
-        if(succeedPromise){
-          onSuccess(expectedLoggedInUser)
-        }else{
-          onError();
-        }
-      };
-      mockUser.$promise = {};
-      mockUser.$promise.then = thenMock;
+      var defer = $q.defer();
+      if(succeedCurrentUserPromise){
+        defer.resolve(expectedLoggedInUser);
+      }else{
+        defer.reject();
+      }
+      mockUser.$promise = defer.promise;
       return mockUser;
     });
 
@@ -90,34 +89,40 @@ describe('Controller: MyLinksCtrl', function () {
   }));
 
   it('Authorization method should be called when scope.init is called', function () {
-    succeedPromise = true;
+    succeedCurrentUserPromise = true;
     scope.init();
+    scope.$apply();
     expect(AuthSpy.getCurrentUser).toHaveBeenCalled();
   });
 
   it('should save in the scope an error message when an error is thrown trying to get current user', function () {
-    succeedPromise = false;
+    succeedCurrentUserPromise = false;
     scope.init();
+    scope.$apply();
     expect(AuthSpy.getCurrentUser).toHaveBeenCalled();
     expect(scope.errorMessage).toBe(messsages.UNEXPECTED_ERROR);
+
   });
 
   it('logged in user should be added to scope', function() {
-    succeedPromise = true;
+    succeedCurrentUserPromise = true;
     scope.init();
+    scope.$apply();
     expect(scope.currentUser).not.toBe(undefined);
     expect(scope.currentUser._id).toBe(expectedLoggedInUser._id);
   });
 
   it('should call get links by user mechanism', function () {
-    succeedPromise = true;
+    succeedCurrentUserPromise = true;
     scope.init();
+    scope.$apply();
     expect(LinkServiceSpy.getByUser).toHaveBeenCalled();
   });
 
   it('should add to scope all links of logged in user', function(){
-    succeedPromise = true;
+    succeedCurrentUserPromise = true;
     scope.init();
+    scope.$apply();
     expect(scope.links).not.toBe(undefined);
     expect(scope.links.length).toBe(1);
     expect(scope.links[0]).toBe(expectedLinkByUser);
@@ -167,7 +172,6 @@ describe('Controller: MyLinksCtrl', function () {
   it('should update link by calling right service and removing id from the scope', function(){
     var mockLinkToBeUpdated = {_id:'mockLinkToBeUpdated', url:'firstURL'};
     scope.displayEditId = mockLinkToBeUpdated._id;
-    succeedPromise = true;
     scope.updateLink(mockLinkToBeUpdated);
     expect(scope.displayEditId).toBe('');
   });
